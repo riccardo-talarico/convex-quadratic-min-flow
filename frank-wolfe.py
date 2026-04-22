@@ -1,12 +1,16 @@
 from utils.convex_min_flow import ConvexMinFlow
 import numpy as np
-
-#TODO use the solver for this
-def solve_lp(function_value, gradient):
-    return 0
+from typing import Callable
+from solvers import successive_shortest_path
 
 
-def solve_frank_wolfe_convex_min_flow(cmf: ConvexMinFlow, max_iter : int = 1000, eps : np.float64 = 1e-4, verbose:bool = False):
+def solve_frank_wolfe_convex_min_flow(
+        cmf: ConvexMinFlow, 
+        max_iter : int = 1000, 
+        eps : np.float64 = 1e-4, 
+        verbose:bool = False,
+        lp_solver: Callable = successive_shortest_path
+        ):
     """
     The function solves the Convex Min Flow problem on the provided instance cmf using the Frank-Wolfe method.
 
@@ -15,6 +19,7 @@ def solve_frank_wolfe_convex_min_flow(cmf: ConvexMinFlow, max_iter : int = 1000,
         max_iter (int): The maximum number of possible iterations of the algorithm.
         eps (np.float.64): The precision of the solution.
         verbose (bool): Flag that outpus extra information during the execution.
+        lp_solver (Callable): function that takes in input the subproblem constraints and returns the solution.
     
     Returns:
         tuple[np.float64, np.array]: The best f(x) found and the respective x.
@@ -28,7 +33,8 @@ def solve_frank_wolfe_convex_min_flow(cmf: ConvexMinFlow, max_iter : int = 1000,
         g = - (cmf.Q * x + cmf.q)
 
         # Solve LP problem
-        y = solve_lp(f_x,g)
+        _,_,E,b,u = cmf.get_args()
+        y = lp_solver(g,E,b,0,u)
 
         # Compute lower bound
         lower_bound = f_x + g*(y-x)
@@ -73,9 +79,6 @@ def solve_frank_wolfe_convex_min_flow(cmf: ConvexMinFlow, max_iter : int = 1000,
     print(f"Stop at iter: {i}, status: {status}, best f(x):{f_x}, relative gap: {rel_gap}")
     return (f_x, x)
 
-        
 
-if __name__ == '__main__':
-    x = np.array([[2,2,2]])
-    q = np.array([[1,1,1]])
-    print(q*x*x)
+
+

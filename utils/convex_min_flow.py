@@ -59,6 +59,9 @@ class ConvexMinFlow():
             return False
         return True
     
+    def get_args(self):
+        return self.Q, self.q, self.E, self.b, self.u
+    
 
 if __name__ == '__main__':
     cmf = ConvexMinFlow(np.array([1,-1,1]),np.array([0,0,1]),np.array([[1,0,0],[0,1,0],[0,0,1]]),np.array([1,0,0]),np.array([1,1,1]))
