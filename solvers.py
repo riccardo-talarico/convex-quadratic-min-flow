@@ -1,6 +1,7 @@
 import numpy as np
 import heapq
-
+from pulp import *
+from typing import Any
 
 # min{cx : Ex=b, lb <= x <= ub}
 def successive_shortest_paths(
@@ -144,3 +145,36 @@ def find_reachable_demand_node(dist,demand_nodes):
     if t is None:
         raise ValueError("Problem is infeasible")
     return t
+
+def generic_lp_solver(
+        linear_constraints,
+        incidence_matrix,
+        node_flow_constraints,
+        lower_bound,
+        upper_bound,
+        solver: Any | None = None
+        ):
+    n, m = incidence_matrix.shape
+
+    # Define problem
+    prob = LpProblem("min_flow", LpMinimize)
+
+    # Decision variables x_j for each arc j
+    x = [
+        LpVariable(f"x_{j}", lowBound=lower_bound[j], upBound=upper_bound[j])
+        for j in range(m)
+    ]
+
+    # Objective: c^T x
+    prob += lpSum(linear_constraints[j] * x[j] for j in range(m))
+
+    # Constraints: Ex = b (row by row)
+    for i in range(n):
+        prob += lpSum(incidence_matrix[i, j] * x[j] for j in range(m)) == node_flow_constraints[i], f"node_{i}"
+    if not solver:
+        prob.solve()
+    else:
+        prob.solve(solver)
+
+    return np.array([value(x[j]) for j in range(m)])
+
