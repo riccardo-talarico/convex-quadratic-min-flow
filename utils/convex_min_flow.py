@@ -6,11 +6,11 @@ import numpy as np
 
 @dataclass
 class ConvexMinFlow():
-    Q : np.array # Since it is diagonal I can accept an array with size (m,)
-    q : np.array
-    E : np.array
-    b : np.array
-    u : np.array
+    Q : np.ndarray # Since it is diagonal I can accept an array with size (m,)
+    q : np.ndarray
+    E : np.ndarray
+    b : np.ndarray
+    u : np.ndarray
 
     def check_init(self) -> bool:
         """
