@@ -1,6 +1,6 @@
 import numpy as np
 
-def parse_dmx(filename):
+def parse_dmx(filename, return_arcs:bool = False):
     with open(filename, "r") as f:
         lines = f.readlines()
 
@@ -38,7 +38,7 @@ def parse_dmx(filename):
     # Default b = 0 if not specified
     b = np.zeros(n)
     for i, val in b_dict.items():
-        b[i] = val
+        b[i] = -val
 
     # Build arrays
     m = len(arcs)
@@ -53,8 +53,11 @@ def parse_dmx(filename):
         q[j] = cost
         lb[j] = l
         ub[j] = ucap
-
-    return q, E, b, lb, ub
+        
+    if return_arcs:
+        return q,E,b,lb,ub,arcs
+    else:
+        return q, E, b, lb, ub
 
 
 def parse_qfc(filename):
