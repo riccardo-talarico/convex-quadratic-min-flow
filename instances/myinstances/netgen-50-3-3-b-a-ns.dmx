@@ -1,0 +1,75 @@
+c NETGEN flow network generator (C version)
+c  Problem  1 input parameters
+c  ---------------------------
+c   Random seed:           321753692
+c   Number of nodes:              12
+c   Source nodes:                  1
+c   Sink nodes:                    1
+c   Number of arcs:               50
+c   Minimum arc cost:              1
+c   Maximum arc cost:             53
+c   Total supply:                642
+c   Transshipment -
+c     Sources:                     0
+c     Sinks:                       0
+c   Skeleton arcs -
+c     With max cost:               0%
+c     Capacitated:               100%
+c   Minimum arc capacity:         59
+c   Maximum arc capacity:        135
+c
+c  *** Minimum cost flow ***
+c
+p min 12 50
+n 1 54
+n 12 -54
+a 1 7 0 59 35
+a 1 4 0 122 42
+a 1 10 0 86 6
+a 1 8 0 65 28
+a 2 8 0 59 22
+a 2 6 0 93 32
+a 2 3 0 104 52
+a 2 11 0 116 40
+a 3 2 0 59 27
+a 3 5 0 87 21
+a 3 7 0 98 39
+a 3 4 0 114 37
+a 3 12 0 78 48
+a 3 6 0 127 1
+a 4 3 0 59 46
+a 4 1 0 59 34
+a 4 6 0 133 16
+a 5 6 0 59 8
+a 5 2 0 133 45
+a 6 11 0 59 32
+a 6 4 0 124 34
+a 6 3 0 133 47
+a 6 9 0 105 37
+a 6 10 0 131 6
+a 6 8 0 113 51
+a 6 5 0 93 33
+a 7 9 0 59 36
+a 7 12 0 83 32
+a 7 10 0 91 49
+a 8 12 0 59 13
+a 8 9 0 110 8
+a 8 10 0 64 39
+a 8 2 0 100 2
+a 8 3 0 78 6
+a 8 5 0 88 32
+a 9 10 0 59 20
+a 9 7 0 133 50
+a 9 3 0 130 8
+a 9 6 0 92 32
+a 9 2 0 111 53
+a 10 5 0 59 46
+a 10 6 0 131 27
+a 11 4 0 59 52
+a 11 2 0 114 41
+a 11 3 0 71 12
+a 11 8 0 64 8
+a 11 10 0 62 5
+a 11 12 0 79 11
+a 11 6 0 74 28
+a 11 5 0 120 16
