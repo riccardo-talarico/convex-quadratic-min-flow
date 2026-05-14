@@ -33,15 +33,15 @@ def successive_shortest_paths(
     pi = np.zeros(n)
 
     # Main loop
-    supply_nodes = set(np.where(b_res > 1e-12)[0])
-    demand_nodes = set(np.where(b_res < -1e-12)[0])
+    supply_nodes = set(np.where(b_res < -1e-12)[0])
+    demand_nodes = set(np.where(b_res > 1e-12)[0])
 
     while supply_nodes:
 
         s = next(iter(supply_nodes))
 
         # shortest path P = parent
-        dist, parent = shortest_path(s)
+        dist, parent = shortest_path(s, n, arcs, cap_fwd, c, pi, cap_bwd)
         t = find_reachable_demand_node(dist,demand_nodes)
 
         # Update potentials
@@ -51,7 +51,7 @@ def successive_shortest_paths(
 
         # Determine augmenting flow: 
         # delta = min{ e(s), -e(t), min{u_ij: ij in P}}
-        delta = min(b_res[s], -b_res[t])
+        delta = min(-b_res[s], b_res[t])
         
         v = t
         while v != s:
@@ -77,8 +77,8 @@ def successive_shortest_paths(
             v = u
 
         # Update supplies
-        b_res[s] -= delta
-        b_res[t] += delta
+        b_res[s] += delta
+        b_res[t] -= delta
 
         if abs(b_res[s]) < 1e-12:
             supply_nodes.remove(s)
@@ -134,6 +134,7 @@ def build_arcs_list(E:np.ndarray, m:int):
         tail = np.where(E[:, k] == -1)[0][0]
         head = np.where(E[:, k] == 1)[0][0]
         arcs.append((tail, head))
+    return arcs
 
 def find_reachable_demand_node(dist,demand_nodes):
     t = None
@@ -172,9 +173,11 @@ def generic_lp_solver(
     for i in range(n):
         prob += lpSum(incidence_matrix[i, j] * x[j] for j in range(m)) == node_flow_constraints[i], f"node_{i}"
     if not solver:
-        prob.solve()
+        status = prob.solve()
     else:
-        prob.solve(solver)
+        status = prob.solve(solver)
+
+    print("Status:", LpStatus[prob.status])
 
     return np.array([value(x[j]) for j in range(m)])
 
